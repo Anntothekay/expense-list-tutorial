@@ -1,22 +1,43 @@
 import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import "./App.css";
 import { ExpenseList } from "./components/ExpenseList";
 import { ExpenseFilter } from "./components/ExpenseFilter";
+import { ExpenseForm } from "./components/ExpenseForm";
 
 function App() {
+  const [selectedCategory, setSelectedCategory] = useState("");
   const [expenses, setExpenses] = useState([
-    { id: 1, description: "aaa", amount: 10, category: "Utilities" },
-    { id: 2, description: "bbb", amount: 10, category: "Groceries" },
-    { id: 3, description: "ccc", amount: 10, category: "Entertainment" },
+    { id: 1, description: "Icecream", amount: 1.59, category: "Groceries" },
+    {
+      id: 2,
+      description: "Cinema Tickets",
+      amount: 15.9,
+      category: "Entertainment",
+    },
+    {
+      id: 3,
+      description: "Electricity Bill",
+      amount: 48,
+      category: "Utilities",
+    },
   ]);
+
+  const filteredExpenses = selectedCategory
+    ? expenses.filter((expense) => expense.category === selectedCategory)
+    : expenses;
 
   return (
     <div className="container mt-3">
-      <ExpenseFilter onSelectCategory={(category) => console.log(category)} />
+      <ExpenseForm
+        onSave={(expense) =>
+          setExpenses([...expenses, { ...expense, id: expenses.length + 1 }])
+        }
+      />
+      <ExpenseFilter
+        onSelectCategory={(category) => setSelectedCategory(category)}
+      />
       <ExpenseList
-        expenses={expenses}
+        expenses={filteredExpenses}
         onDelete={(id) =>
           setExpenses(expenses.filter((expense) => expense.id !== id))
         }
